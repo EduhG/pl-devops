@@ -1,0 +1,19 @@
+{
+  "name": "eduhg/php-nginx-app",
+  "description": "A sample PHP application running on Nginx.",
+  "type": "project",
+  "require": {
+    "php": "^8.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "PhpNginxApp\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "EduhG",
+      "email": "edwinnyangena@gmail.com"
+    }
+  ]
+}

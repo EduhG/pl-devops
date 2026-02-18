@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  php:
+    image: php-ecs-app:latest
+    container_name: php-ecs-app
+    environment:
+      - API_KEY=testing
+
+  nginx:
+    image: php-ecs-nginx:latest
+    container_name: php-ecs-nginx
+    ports:
+      - "8080:80"
+    depends_on:
+      - php

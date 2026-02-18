@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  php:
+    build:
+      context: ./app
+      args:
+        - platform=linux/amd64
+      dockerfile: Dockerfile
+    image: php-ecs-app:dev
+    container_name: php-ecs-app-dev
+    environment:
+      - API_KEY=testing
+    volumes:
+      - ./app:/var/www
+
+  nginx:
+    build:
+      context: ./nginx
+      args:
+        - platform=linux/amd64
+      dockerfile: Dockerfile
+    image: php-ecs-nginx:latest
+    container_name: php-ecs-nginx-dev
+    ports:
+      - "8080:80"
+    depends_on:
+      - php
+    volumes:
+      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf

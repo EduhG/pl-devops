@@ -1,0 +1,34 @@
+# Exclude version control history and configuration
+.git/
+.gitignore
+
+# Exclude locally installed Composer dependencies, as they should be installed inside the container during the build process
+# The 'vendor/' directory is a standard location for Composer dependencies
+vendor/
+
+# Exclude application environment files
+# These often contain sensitive information and should be managed via other means (e.g., environment variables)
+.env
+.env.*
+
+# Exclude common IDE and editor configuration files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Exclude common build and log artifacts
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+build/
+dist/
+tmp/
+temp/
+
+# Exclude Docker-related files themselves
+Dockerfile
+Dockerfile.*
+docker-compose*.yml
+.dockerignore
