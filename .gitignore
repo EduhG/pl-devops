@@ -1,0 +1,27 @@
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files and backups (sensitive data)
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Exclude all .tfvars files, as they can contain secrets.
+# If you want to include specific .tfvars files (e.g., non-sensitive ones),
+# use a negation pattern like `!important.tfvars`.
+*.tfvars
+*.tfvars.json
+
+# Ignore override files, as they are usually used for local development and testing
+# and can contain environment-specific configurations that shouldn't be shared.
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform CLI configuration files
+.terraformrc
+terraform.rc
