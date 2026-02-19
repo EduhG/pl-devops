@@ -43,3 +43,9 @@ variable "php_app_image_url" {
   description = "URL of the PHP App Docker image to be used in the ECS task definition."
   type        = string
 }
+
+variable "alb_name" {
+  description = "Name of the Application Load Balancer to be used"
+  type        = string
+  default     = ""
+}

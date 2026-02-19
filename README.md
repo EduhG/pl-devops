@@ -190,7 +190,8 @@ This provisions:
 
 After apply, Terraform will output:
 
-- `alb_name`: Public endpoint of the application
+- `alb_name`: Name of the ALB that was created
+- `alb_security_group_id`: Security group Id that was created
 - `repository_urls`: URLs to push Docker images
 
 ### 3. Setup ECS envrironment
@@ -204,6 +205,7 @@ zone_name         = "ROUTE53_ZONE_NAME"
 domain_name       = "YOUR_APP_DOMAIN"
 nginx_image_url   = "NGINX_IMAGE_URL"
 php_app_image_url = "PHP_IMAGE_URL"
+alb_name          ="<alb_name>"
 ```
 
 You can get `zone_name` from one of your configured Route53 hosting zones. For simlicity, `domain_name` is a subdomain that will be created in your hosted zone.

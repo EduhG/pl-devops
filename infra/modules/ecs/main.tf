@@ -99,7 +99,7 @@ resource "aws_security_group" "alb" {
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
-    security_groups = var.alb_security_groups
+    security_groups = data.aws_lb.existing_alb.security_groups
   }
 
   egress {

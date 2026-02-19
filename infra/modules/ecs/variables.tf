@@ -70,12 +70,6 @@ variable "alb_name" {
   default     = ""
 }
 
-# variable "alb_listener_arn" {
-#   description = "ARN of an existing ALB listener to attach listener rules"
-#   type        = string
-#   default     = ""
-# }
-
 variable "alb_protocol" {
   description = "Protocol for ALB listener"
   type        = string
@@ -90,12 +84,6 @@ variable "alb_listener_rule_host_headers" {
 
 variable "alb_listener_rule_path_patterns" {
   description = "Optional list of path patterns for routing"
-  type        = list(string)
-  default     = []
-}
-
-variable "alb_security_groups" {
-  description = "List of security groups for the ALB"
   type        = list(string)
   default     = []
 }

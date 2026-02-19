@@ -65,12 +65,11 @@ module "ecs_app" {
   memory              = "1024"
   ecs_security_groups = []
 
-  enable_alb          = true
-  alb_protocol        = "HTTPS"
-  domain_name         = var.domain_name
-  alb_name            = "php-ecs-app-alb"
-  alb_security_groups = ["sg-0bf494f1c1de1bfea"]
-  zone_name           = "l2t.me"
+  enable_alb   = true
+  alb_protocol = "HTTPS"
+  domain_name  = var.domain_name
+  alb_name     = var.alb_name
+  zone_name    = var.zone_name
 }
 
 output "public_url" {
