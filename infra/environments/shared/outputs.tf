@@ -13,3 +13,7 @@ output "alb_security_group_id" {
 output "alb_name" {
   value = module.alb.alb_name
 }
+
+output "sns_topic_arn" {
+  value = aws_sns_topic.ecs_alerts.arn
+}
