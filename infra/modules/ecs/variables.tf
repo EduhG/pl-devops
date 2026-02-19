@@ -99,3 +99,27 @@ variable "zone_name" {
   type        = string
   default     = ""
 }
+
+variable "max_capacity" {
+  description = "Maximum number of tasks for auto-scaling"
+  type        = number
+  default     = 4
+}
+
+variable "enable_monitoring" {
+  description = "Whether to enable CloudWatch monitoring for the ECS service"
+  type        = bool
+  default     = false
+}
+
+variable "alerts_email" {
+  description = "Email address to receive CloudWatch alarms"
+  type        = string
+  default     = ""
+}
+
+variable "topic_arn" {
+  description = "SNS topic ARN for ECS alerts"
+  type        = string
+  default     = ""
+}

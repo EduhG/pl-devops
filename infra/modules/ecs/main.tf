@@ -154,8 +154,8 @@ resource "aws_route53_record" "alb_record" {
 }
 
 resource "aws_appautoscaling_target" "ecs_target" {
-  min_capacity = 1
-  max_capacity = 4
+  min_capacity = var.desired_count
+  max_capacity = var.max_capacity
 
   service_namespace  = "ecs"
   scalable_dimension = "ecs:service:DesiredCount"
@@ -195,4 +195,88 @@ resource "aws_appautoscaling_policy" "rps" {
       resource_label         = "${data.aws_lb.existing_alb.arn_suffix}/${aws_lb_target_group.tg[0].arn_suffix}"
     }
   }
+}
+
+resource "aws_sns_topic_subscription" "google_chat" {
+  count     = var.enable_monitoring ? 1 : 0
+  topic_arn = var.topic_arn
+  protocol  = "email"
+  endpoint  = var.alerts_email
+}
+
+resource "aws_cloudwatch_metric_alarm" "unhealthy_hosts" {
+  count               = var.enable_monitoring ? 1 : 0
+  alarm_name          = "${var.cluster_name}-unhealthy-hosts"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 1
+  metric_name         = "UnHealthyHostCount"
+  namespace           = "AWS/ApplicationELB"
+  period              = 60
+  statistic           = "Average"
+  threshold           = 1
+
+  dimensions = {
+    TargetGroup  = try(aws_lb_target_group.tg[0].arn_suffix, "")
+    LoadBalancer = data.aws_lb.existing_alb.arn_suffix
+  }
+
+  alarm_actions = [var.topic_arn]
+}
+
+resource "aws_cloudwatch_metric_alarm" "high_cpu" {
+  count               = var.enable_monitoring ? 1 : 0
+  alarm_name          = "${var.cluster_name}-high-cpu"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 2
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/ECS"
+  period              = 60
+  statistic           = "Average"
+  threshold           = 75
+
+  dimensions = {
+    ClusterName = var.cluster_name
+    ServiceName = "${var.cluster_name}-service"
+  }
+
+  alarm_actions = [var.topic_arn]
+}
+
+resource "aws_cloudwatch_metric_alarm" "at_max_capacity" {
+  count               = var.enable_monitoring ? 1 : 0
+  alarm_name          = "${var.cluster_name}-at-max-capacity"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 2
+  metric_name         = "RunningTaskCount"
+  namespace           = "AWS/ECS"
+  period              = 60
+  statistic           = "Average"
+  threshold           = var.max_capacity - 1
+
+  dimensions = {
+    ClusterName = var.cluster_name
+    ServiceName = "${var.cluster_name}-service"
+  }
+
+  treat_missing_data = "breaching"
+  alarm_actions      = [var.topic_arn]
+}
+
+resource "aws_cloudwatch_metric_alarm" "alb_5xx" {
+  count               = var.enable_monitoring ? 1 : 0
+  alarm_name          = "${var.cluster_name}-5xx-errors"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "HTTPCode_Target_5XX_Count"
+  namespace           = "AWS/ApplicationELB"
+  period              = 60
+  statistic           = "Sum"
+  threshold           = 5
+
+  dimensions = {
+    TargetGroup  = try(aws_lb_target_group.tg[0].arn_suffix, "")
+    LoadBalancer = data.aws_lb.existing_alb.arn_suffix
+  }
+
+  alarm_actions = [var.topic_arn]
 }

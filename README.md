@@ -224,6 +224,7 @@ This provisions:
 - ECS cluster and Fargate tasks
 - ALB Listener rule with target group
 - Security groups and IAM roles
+- ECS service with both CPU(ECSServiceAverageCPUUtilization) and RPS(ALBRequestCountPerTarget) autoscaling
 
 #### Outputs
 
@@ -308,3 +309,67 @@ Example Response:
   }
 }
 ```
+
+## Load Testing & Autoscaling Validation
+
+The ECS service is configured with Application Auto Scaling based on a target of **100 Requests Per Second (RPS)** using the `ALBRequestCountPerTarget` metric.
+
+To validate that autoscaling works correctly.
+
+### 1. Install `hey` (HTTP Load Generator)
+
+```bash
+# macOS
+brew install hey
+
+# or via Go
+go install github.com/rakyll/hey@latest
+```
+
+### 2. Generate Load Above Target (100 RPS)
+
+To trigger scaling, generate sustained traffic above the configured threshold:
+
+```bash
+hey -z 3m -q 150 -c 30 -H "x-api-key: <API_KEY>" https://<public_url>/api
+```
+
+- `-z 3m` - Run test for 3 minutes (autoscaling requires sustained load)
+- `-q 150` - 150 requests per second
+- `-c 30` - 30 concurrent workers
+- `-H` - Required API key header
+
+## Monitoring & Alerts
+
+Basic production-grade monitoring has been implemented for the ECS service to ensure availability, performance visibility, and scaling awareness.
+
+The system leverages:
+
+- Amazon CloudWatch for metrics and alarms
+- Amazon SNS for alert routing
+- Email for real-time notifications
+
+### Coverage
+
+#### 1. Service Health
+
+Ensures immediate detection of failing tasks, unhealthy deployments, or service outages. We are using the following metrics
+
+- ALB UnHealthyHostCount
+- ECS RunningTaskCount vs desired state
+
+#### 2. Service Performance
+
+Provides early visibility into resource pressure, runtime instability, and user-impacting errors. Metrics used include
+
+- ECS CPUUtilization
+- ALB HTTPCode_Target_5XX_Count
+- Request volume metrics
+
+#### 3. Scaling Saturation
+
+This prevents silent capacity saturation and highlights scaling ceiling risks.
+
+### Quick Test
+
+To quickly test if the alerts are triggered, update the target group and change the health endpoint to trigger unhealthy hosts.

@@ -1,23 +1,3 @@
-# variable "project_name" {
-#   description = "Name prefix used for all created AWS resources (e.g. myapp, demo-api)."
-#   type        = string
-# }
-
-# variable "vpc_id" {
-#   description = "ID of the VPC where the Application Load Balancer and ECS service will be deployed."
-#   type        = string
-# }
-
-# variable "public_subnet_ids" {
-#   description = "List of public subnet IDs where the Application Load Balancer will be provisioned."
-#   type        = list(string)
-# }
-
-# variable "certificate_arn" {
-#   description = "ARN of the ACM certificate to be attached to the HTTPS listener of the ALB."
-#   type        = string
-# }
-
 variable "domain_name" {
   description = "A domain name for which the application will be accessed from"
   type        = string
@@ -54,4 +34,17 @@ variable "api_key" {
   description = "API key for the application"
   type        = string
   default     = "somethingverysecret"
+  sensitive   = true
+}
+
+variable "alerts_email" {
+  description = "Email address to receive CloudWatch alarms"
+  type        = string
+  default     = ""
+}
+
+variable "topic_arn" {
+  description = "SNS topic ARN for ECS alerts"
+  type        = string
+  default     = ""
 }

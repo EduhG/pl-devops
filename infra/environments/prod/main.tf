@@ -10,7 +10,7 @@ data "aws_subnets" "default_subnets" {
 }
 
 locals {
-  cluster_name = "php-ecs-app-cluster-prod"
+  cluster_name = "php-ecs-app-cluster"
   subnet_ids   = data.aws_subnets.default_subnets.ids
 }
 
@@ -45,8 +45,8 @@ module "ecs_app" {
     {
       name         = "app"
       image        = var.php_app_image_url
-      cpu          = 256
-      memory       = 512
+      cpu          = 128
+      memory       = 256
       essential    = false
       portMappings = []
       environment = [
@@ -67,9 +67,10 @@ module "ecs_app" {
     }
   ]
 
-  desired_count       = 2
-  cpu                 = "512"
-  memory              = "1024"
+  desired_count       = 1
+  max_capacity        = 4
+  cpu                 = "256"
+  memory              = "512"
   ecs_security_groups = []
 
   enable_alb   = true
@@ -77,6 +78,10 @@ module "ecs_app" {
   domain_name  = var.domain_name
   alb_name     = var.alb_name
   zone_name    = var.zone_name
+
+  enable_monitoring = true
+  topic_arn         = var.topic_arn
+  alerts_email      = var.alerts_email
 }
 
 output "public_url" {
