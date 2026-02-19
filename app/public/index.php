@@ -36,8 +36,6 @@ function log_request($path) {
         ]
     ];
 
-    // // Log to stdout / console (works with Docker / CloudWatch)
-    // echo json_encode($logEntry) . PHP_EOL;
     // Write log to stderr instead of HTTP response
     file_put_contents('php://stderr', json_encode($logEntry) . PHP_EOL);
 }
@@ -47,7 +45,6 @@ log_request($request);
 switch ($request) {
     case '/health':
         // Health check endpoint
-        log_json("info", "API request received", ["path" => $_SERVER['REQUEST_URI']]);
         echo json_encode(['status' => 'OK', 'timestamp' => time()]);
         break;
 
