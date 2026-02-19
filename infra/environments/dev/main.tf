@@ -10,7 +10,7 @@ data "aws_subnets" "default_subnets" {
 }
 
 locals {
-  cluster_name = "php-ecs-app-cluster-dev"
+  cluster_name = "php-ecs-app-cluster"
   subnet_ids   = data.aws_subnets.default_subnets.ids
 }
 
@@ -31,6 +31,7 @@ module "ecs_app" {
       portMappings = [
         { containerPort = 80, hostPort = 80 }
       ]
+      environment = []
       logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -48,6 +49,12 @@ module "ecs_app" {
       memory       = 512
       essential    = false
       portMappings = []
+      environment = [
+        {
+          name  = "API_KEY"
+          value = "${var.api_key}"
+        }
+      ]
       logConfiguration = {
         logDriver = "awslogs"
         options = {

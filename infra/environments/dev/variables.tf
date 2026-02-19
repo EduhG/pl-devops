@@ -49,3 +49,9 @@ variable "alb_name" {
   type        = string
   default     = ""
 }
+
+variable "api_key" {
+  description = "API key for the application"
+  type        = string
+  default     = "somethingverysecret"
+}

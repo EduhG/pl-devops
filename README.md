@@ -206,6 +206,7 @@ domain_name       = "YOUR_APP_DOMAIN"
 nginx_image_url   = "NGINX_IMAGE_URL"
 php_app_image_url = "PHP_IMAGE_URL"
 alb_name          ="<alb_name>"
+api_key           = "somethingverysecretandsecure"
 ```
 
 You can get `zone_name` from one of your configured Route53 hosting zones. For simlicity, `domain_name` is a subdomain that will be created in your hosted zone.
